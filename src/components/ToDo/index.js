@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   View,
   Text,
@@ -6,6 +7,8 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/Feather';
 
 const {width, height} = Dimensions.get('window');
 
@@ -57,12 +60,13 @@ export default class ToDo extends React.Component {
             Hello I'm a To Do
           </Text>
         </View>
-        {/* <View style={styles.column}> */}
         {isEditing ? (
           <View style={styles.actions}>
             <TouchableOpacity onPressOut={this.handleFinishEditing}>
               <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>Confirm</Text>
+                {/* <Text style={styles.actionText}> */}
+                <Icon name="check" size={30} color="#62ff00" />
+                {/* </Text> */}
               </View>
             </TouchableOpacity>
           </View>
@@ -70,17 +74,19 @@ export default class ToDo extends React.Component {
           <View style={styles.actions}>
             <TouchableOpacity onPressOut={this.handleStartEditing}>
               <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>Edit</Text>
+                {/* <Text style={styles.actionText}> */}
+                <Icon name="edit-2" size={30} color="#62ff00" />
+                {/* </Text> */}
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>Delete</Text>
+                {/* <Text style={styles.actionText}>Delete</Text> */}
+                <Icon name="trash" size={30} color="red" />
               </View>
             </TouchableOpacity>
           </View>
         )}
-        {/* </View> */}
       </View>
     );
   }

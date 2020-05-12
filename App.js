@@ -8,7 +8,6 @@
 
 import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   TextInput,
@@ -20,14 +19,6 @@ import {
 } from 'react-native';
 
 import ToDo from './src/components/ToDo';
-
-// import {
-//   Header,
-//   LearnMoreLinks,
-//   Colors,
-//   DebugInstructions,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
 
 const {height, width} = Dimensions.get('window');
 
@@ -110,43 +101,6 @@ const styles = StyleSheet.create({
   },
   toDos: {
     alignItems: 'center',
+    height: height - 25,
   },
-  // scrollView: {
-  //   backgroundColor: Colors.lighter,
-  // },
-  // engine: {
-  //   position: 'absolute',
-  //   right: 0,
-  // },
-  // body: {
-  //   backgroundColor: Colors.white,
-  // },
-  // sectionContainer: {
-  //   marginTop: 32,
-  //   paddingHorizontal: 24,
-  // },
-  // sectionTitle: {
-  //   fontSize: 24,
-  //   fontWeight: '600',
-  //   color: Colors.black,
-  // },
-  // sectionDescription: {
-  //   marginTop: 8,
-  //   fontSize: 18,
-  //   fontWeight: '400',
-  //   color: Colors.dark,
-  // },
-  // highlight: {
-  //   fontWeight: '700',
-  // },
-  // footer: {
-  //   color: Colors.dark,
-  //   fontSize: 12,
-  //   fontWeight: '600',
-  //   padding: 4,
-  //   paddingRight: 12,
-  //   textAlign: 'right',
-  // },
 });
-
-// export default App;
