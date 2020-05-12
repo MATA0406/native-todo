@@ -6,30 +6,49 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  TextInput,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
+import PropTypes from 'prop-types';
+
 const {width, height} = Dimensions.get('window');
 
 export default class ToDo extends React.Component {
-  state = {
-    isEditing: false,
-    isCompleted: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isEditing: false,
+      toDoValue: props.text,
+      deleteToDo: PropTypes.func.isRequired,
+      id: PropTypes.string.isRequired,
+      uncompleteToDo: PropTypes.func.isRequired,
+      completeToDo: PropTypes.func.isRequired,
+    };
+  }
+
+  static propTypes = {
+    text: PropTypes.string.isRequired,
+    isCompleted: PropTypes.bool.isRequired,
   };
 
   handleTogleComplete = () => {
-    this.setState((prevState) => {
-      return {
-        isCompleted: !prevState.isCompleted,
-        // isEditing: !prevState.isEditing,
-      };
-    });
+    const {isCompleted, uncompleteToDo, completeToDo, id} = this.props;
+
+    if (isCompleted) {
+      uncompleteToDo(id);
+    } else {
+      completeToDo(id);
+    }
   };
 
   handleStartEditing = () => {
+    const {text} = this.props;
+
     this.setState({
       isEditing: true,
+      toDoValue: text,
     });
   };
 
@@ -39,8 +58,16 @@ export default class ToDo extends React.Component {
     });
   };
 
+  handleControllInput = (text) => {
+    this.setState({
+      toDoValue: text,
+    });
+  };
+
   render() {
-    const {isCompleted, isEditing} = this.state;
+    const {isEditing, toDoValue} = this.state;
+    const {text, id, deleteToDo, isCompleted} = this.props;
+
     return (
       <View style={styles.container}>
         <View style={styles.column}>
@@ -52,21 +79,35 @@ export default class ToDo extends React.Component {
               ]}
             />
           </TouchableOpacity>
-          <Text
-            style={[
-              styles.text,
-              isCompleted ? styles.completedText : styles.uncompletedText,
-            ]}>
-            Hello I'm a To Do
-          </Text>
+          {isEditing ? (
+            <TextInput
+              style={[
+                styles.input,
+                styles.text,
+                isCompleted ? styles.completedText : styles.uncompletedText,
+              ]}
+              value={toDoValue}
+              onChangeText={this.handleControllInput}
+              multiline={true}
+              returnKeyType={'done'}
+              onBlur={this.handleFinishEditing}
+            />
+          ) : (
+            <Text
+              style={[
+                styles.text,
+                isCompleted ? styles.completedText : styles.uncompletedText,
+              ]}>
+              {text}
+            </Text>
+          )}
         </View>
+
         {isEditing ? (
           <View style={styles.actions}>
             <TouchableOpacity onPressOut={this.handleFinishEditing}>
               <View style={styles.actionContainer}>
-                {/* <Text style={styles.actionText}> */}
                 <Icon name="check" size={30} color="#62ff00" />
-                {/* </Text> */}
               </View>
             </TouchableOpacity>
           </View>
@@ -74,14 +115,11 @@ export default class ToDo extends React.Component {
           <View style={styles.actions}>
             <TouchableOpacity onPressOut={this.handleStartEditing}>
               <View style={styles.actionContainer}>
-                {/* <Text style={styles.actionText}> */}
                 <Icon name="edit-2" size={30} color="#62ff00" />
-                {/* </Text> */}
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPressOut={() => deleteToDo(id)}>
               <View style={styles.actionContainer}>
-                {/* <Text style={styles.actionText}>Delete</Text> */}
                 <Icon name="trash" size={30} color="red" />
               </View>
             </TouchableOpacity>
@@ -131,7 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: width / 2,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   actions: {
     flexDirection: 'row',
@@ -139,5 +177,10 @@ const styles = StyleSheet.create({
   actionContainer: {
     marginVertical: 10,
     marginHorizontal: 10,
+  },
+  input: {
+    width: width / 2,
+    marginVertical: 15,
+    paddingBottom: 5,
   },
 });
