@@ -34,7 +34,9 @@ export default class ToDo extends React.Component {
     isCompleted: PropTypes.bool.isRequired,
   };
 
-  handleTogleComplete = () => {
+  handleTogleComplete = (event) => {
+    event.stopPropagation();
+
     const {isCompleted, uncompleteToDo, completeToDo, id} = this.props;
 
     if (isCompleted) {
@@ -44,7 +46,9 @@ export default class ToDo extends React.Component {
     }
   };
 
-  handleStartEditing = () => {
+  handleStartEditing = (event) => {
+    event.stopPropagation();
+
     const {text} = this.props;
 
     this.setState({
@@ -53,7 +57,9 @@ export default class ToDo extends React.Component {
     });
   };
 
-  handleFinishEditing = () => {
+  handleFinishEditing = (event) => {
+    event.stopPropagation();
+
     const {toDoValue} = this.state;
     const {id, updateTodo} = this.props;
 
@@ -72,7 +78,7 @@ export default class ToDo extends React.Component {
 
   render() {
     const {isEditing, toDoValue} = this.state;
-    const {text, id, deleteToDo, isCompleted, updateTodo} = this.props;
+    const {text, id, deleteToDo, isCompleted} = this.props;
 
     return (
       <View style={styles.container}>
@@ -124,7 +130,11 @@ export default class ToDo extends React.Component {
                 <Icon name="edit-2" size={30} color="#62ff00" />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPressOut={() => deleteToDo(id)}>
+            <TouchableOpacity
+              onPressOut={(event) => {
+                event.stopPropagation;
+                deleteToDo(id);
+              }}>
               <View style={styles.actionContainer}>
                 <Icon name="trash" size={30} color="red" />
               </View>
@@ -149,7 +159,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    // borderColor: 'red',
     borderWidth: 3,
     marginRight: 20,
   },
@@ -162,7 +171,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '600',
     fontSize: 20,
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   completedText: {
     color: '#bbb',
@@ -175,7 +184,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: width / 2,
-    // justifyContent: 'space-between',
   },
   actions: {
     flexDirection: 'row',
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: width / 2,
-    marginVertical: 15,
+    // marginVertical: 15,
     paddingBottom: 5,
   },
 });

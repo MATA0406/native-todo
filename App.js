@@ -35,7 +35,8 @@ export default class App extends React.Component {
   };
 
   componentDidMount = () => {
-    // this._loadedToDos();
+    // AsyncStorage.clear();
+    this._loadedToDos();
   };
 
   _changeNewToDo = (text) => {
@@ -44,10 +45,15 @@ export default class App extends React.Component {
     });
   };
 
-  _loadedToDos = () => {
-    this.setState({
-      loadedToDos: true,
-    });
+  _loadedToDos = async () => {
+    try {
+      const toDos = await AsyncStorage.getItem('toDos');
+      const parsedToDos = JSON.parse(toDos);
+      console.log('parsedToDos :: ', parsedToDos);
+      this.setState({loadedToDos: true, toDos: parsedToDos});
+    } catch (err) {
+      console.log('err :: ', err);
+    }
   };
 
   _addToDo = () => {
@@ -176,16 +182,18 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).map((toDo) => (
-              <ToDo
-                key={toDo.id}
-                {...toDo}
-                deleteToDo={this._deleteToDo}
-                uncompleteToDo={this._uncompleteToDo}
-                completeToDo={this._completeToDo}
-                updateTodo={this._updateTodo}
-              />
-            ))}
+            {Object.values(toDos)
+              .reverse()
+              .map((toDo) => (
+                <ToDo
+                  key={toDo.id}
+                  {...toDo}
+                  deleteToDo={this._deleteToDo}
+                  uncompleteToDo={this._uncompleteToDo}
+                  completeToDo={this._completeToDo}
+                  updateTodo={this._updateTodo}
+                />
+              ))}
           </ScrollView>
         </View>
       </View>

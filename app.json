@@ -1,4 +1,7 @@
 {
   "name": "native_toto",
-  "displayName": "native_toto"
+  "displayName": "native_toto",
+  "splash": {
+    "backgroundColor": "#F23657"
+  }
 }
