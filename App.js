@@ -16,6 +16,7 @@ import {
   StatusBar,
   Dimensions,
   Platform,
+  AsyncStorage,
 } from 'react-native';
 
 import ToDo from './src/components/ToDo';
@@ -24,20 +25,20 @@ import ToDo from './src/components/ToDo';
 
 import uuidv1 from 'react-native-uuid';
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 export default class App extends React.Component {
   state = {
     newToDo: '',
-    loadedToDos: false,
     toDos: {},
+    loadedToDos: false,
   };
 
   componentDidMount = () => {
     // this._loadedToDos();
   };
 
-  handleChangeNewToDo = (text) => {
+  _changeNewToDo = (text) => {
     this.setState({
       newToDo: text,
     });
@@ -73,12 +74,13 @@ export default class App extends React.Component {
           },
         };
 
+        this._saveTodos(newState.toDos);
         return {...newState};
       });
     }
   };
 
-  handleDeleteToDo = (id) => {
+  _deleteToDo = (id) => {
     this.setState((prevState) => {
       const toDos = prevState.toDos;
       delete toDos[id];
@@ -86,6 +88,8 @@ export default class App extends React.Component {
         ...prevState,
         ...toDos,
       };
+
+      this._saveTodos(newState.toDos);
       return {...newState};
     });
   };
@@ -103,6 +107,7 @@ export default class App extends React.Component {
         },
       };
 
+      this._saveTodos(newState.toDos);
       return {...newState};
     });
   };
@@ -120,8 +125,32 @@ export default class App extends React.Component {
         },
       };
 
+      this._saveTodos(newState.toDos);
       return {...newState};
     });
+  };
+
+  _updateTodo = (id, text) => {
+    this.setState((prevState) => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            text: text,
+          },
+        },
+      };
+
+      this._saveTodos(newState.toDos);
+      return {...newState};
+    });
+  };
+
+  _saveTodos = (newToDos) => {
+    console.log(JSON.stringify(newToDos));
+    const saveToDo = AsyncStorage.setItem('toDos', JSON.stringify(newToDos)); // 첫번째 인자: 키 두번째 인자: value
   };
 
   render() {
@@ -140,7 +169,7 @@ export default class App extends React.Component {
             style={styles.input}
             placeholder={'New To Do'}
             value={newToDo}
-            onChangeText={this.handleChangeNewToDo}
+            onChangeText={this._changeNewToDo}
             PlaceholderTextColor={'#999'}
             returnKeyType={'done'}
             autoCorrect={false}
@@ -151,9 +180,10 @@ export default class App extends React.Component {
               <ToDo
                 key={toDo.id}
                 {...toDo}
-                deleteToDo={this.handleDeleteToDo}
+                deleteToDo={this._deleteToDo}
                 uncompleteToDo={this._uncompleteToDo}
                 completeToDo={this._completeToDo}
+                updateTodo={this._updateTodo}
               />
             ))}
           </ScrollView>
